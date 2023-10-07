@@ -33,6 +33,14 @@ SELECT * FROM Towns
 	WHERE [Name] LIKE 'M%' OR [Name] LIKE 'K%' OR [Name] LIKE 'B%' OR [Name] LIKE 'E%'
 	ORDER BY [Name]
 
+
+SELECT * FROM Towns
+	WHERE [Name] LIKE '[MKBE]%'
+
+
+SELECT * FROM Towns
+	WHERE SUBSTRING([Name],1,1) IN ('M','K','B','E')
+
 --07. Find Towns Not Starting With
 
 SELECT * FROM Towns
@@ -64,8 +72,13 @@ SELECT EmployeeID,FirstName,LastName,Salary ,DENSE_RANK() OVER
 
 --11. Find All Employees with Rank 2
 
-SELECT EmployeeID,FirstName,LastName,Salary ,DENSE_RANK() OVER   
-    (PARTITION BY Salary ORDER BY EmployeeID) AS [Rank]
+SELECT * FROM (SELECT EmployeeID,FirstName,LastName,Salary ,
+	DENSE_RANK() 
+	OVER (PARTITION BY Salary ORDER BY EmployeeID) AS [Rank]
 	FROM Employees
-	WHERE Salary BETWEEN 10000 AND 50000
+	WHERE Salary BETWEEN 10000 AND 50000) AS [RankTable]
+	WHERE [Rank] = 2
 	ORDER BY Salary DESC
+
+--12. Countries Holding 'A' 3 or More Times
+
