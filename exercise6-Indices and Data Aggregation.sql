@@ -71,3 +71,74 @@ SELECT
 	END AS [AgeGroup],*
 FROM WizzardDeposits) AS [AgeGroupQuery]
 GROUP BY AgeGroup
+
+--10. First Letter
+
+SELECT DISTINCT SUBSTRING(FirstName,1,1) AS [FirstLetter] FROM WizzardDeposits
+GROUP BY FirstName
+
+--11. Average Interest
+
+SELECT 
+		DepositGroup,
+		isDepositExpired,
+		AVG(DepositInterest) AS [AverageInterest] 
+FROM WizzardDeposits
+WHERE DepositStartDate > '01-01-1985'
+GROUP BY DepositGroup,isDepositExpired
+ORDER BY DepositGroup DESC,isDepositExpired
+
+--12. *Rich Wizard, Poor Wizard
+
+SELECT SUM([DIFFERENCE]) AS [SumDifference] FROM
+	(
+		SELECT 
+			FirstName AS [Host Wizard],
+			DepositAmount AS [Host Wizard Deposit],
+			LEAD(FirstName) OVER(ORDER BY Id ASC) as [Guest Wizard],
+			LEAD(DepositAmount) OVER(ORDER BY Id ASC) as [Guest Wizard Deposit],
+			DepositAmount - LEAD(DepositAmount) OVER(ORDER BY Id ASC) AS [Difference]
+		FROM WizzardDeposits
+	) AS [LeadingQuery]
+WHERE [Guest Wizard] IS NOT NULL
+
+
+-- 13. Departments Total Salaries
+
+USE SoftUni
+
+SELECT DepartmentID, SUM(salary) AS [TotalSalary] FROM Employees AS e
+GROUP BY DepartmentID
+ORDER BY DepartmentID
+
+--14. Employees Minimum Salaries
+
+SELECT
+	DepartmentID,
+	MIN(Salary) AS [MinimumSalary] 
+FROM Employees
+WHERE DepartmentID IN (2,5,7) AND HireDate > '01-01-2000'
+GROUP BY DepartmentID
+
+--15. Employees Average Salaries
+
+SELECT * FROM Employees
+WHERE Salary > 3000
+DELETE FROM Employees WHERE ManagerID = 42
+UPDATE Employees SET Salary += 5000 WHERE DepartmentID = 1
+
+SELECT DepartmentID, AVG(Salary) AS [AverageSalary] FROM Employees
+GROUP BY DepartmentID
+
+--16. Employees Maximum Salaries
+
+SELECT * FROM (
+SELECT DepartmentID, MAX(salary) AS [MaxSalary] FROM Employees
+GROUP BY DepartmentID) AS [MaxSalaryQuery]
+WHERE MaxSalary NOT BETWEEN 30000 AND 70000
+
+
+--17. Employees Count Salaries
+
+SELECT COUNT(salary) AS [Count] FROM Employees
+WHERE ManagerID IS NULL
