@@ -44,6 +44,25 @@ ORDER BY e.EmployeeID
 
 --06. Employees Hired After
 
+SELECT e.FirstName, e.LastName, e.HireDate, d.[Name] AS [DeptName]
+FROM Employees AS e
+LEFT JOIN EmployeesProjects AS ep ON e.EmployeeID = ep.EmployeeID
+JOIN Departments AS d ON d.DepartmentID = e.DepartmentID
+WHERE (d.[Name] = 'Sales' OR d.[Name] = 'Finance') 
+AND (HireDate > '1999.01.01')
+ORDER BY HireDate ASC
+
+--07. Employees With Project
+
+SELECT TOP(5) e.EmployeeID,e.FirstName,p.[Name] AS [ProjectName] FROM Employees AS e
+JOIN EmployeesProjects AS ep ON ep.EmployeeID = e.EmployeeID
+JOIN Projects AS p ON p.ProjectID = ep.ProjectID
+WHERE (p.StartDate > '2002.08.13') AND p.EndDate IS NULL
+ORDER BY e.EmployeeID ASC
+
+--08. Employee 24
+
+
 
 
 
