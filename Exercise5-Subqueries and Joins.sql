@@ -26,4 +26,28 @@ JOIN Departments AS d ON d.DepartmentID = e.DepartmentID
 WHERE d.Name = 'Sales'
 ORDER BY e.EmployeeID
 
-SELECT * FROM Departments
+--04. Employee Departments
+
+SELECT TOP(5) e.EmployeeID, e.FirstName, e.Salary, d.Name AS [DepartmentName]
+FROM Employees AS e
+JOIN Departments AS d ON d.DepartmentID = e.DepartmentID
+WHERE Salary > 15000
+ORDER BY d.DepartmentID
+
+--05. Employees Without Projects
+
+SELECT TOP(3) e.EmployeeID,e.FirstName
+FROM Employees AS e
+LEFT JOIN EmployeesProjects AS ep ON ep.EmployeeID = e.EmployeeID
+WHERE ep.EmployeeID IS NULL
+ORDER BY e.EmployeeID
+
+--06. Employees Hired After
+
+
+
+
+
+SELECT * FROM Employees
+SELECT * FROM EmployeesProjects
+SELECT * FROM Projects
