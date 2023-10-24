@@ -62,11 +62,34 @@ ORDER BY e.EmployeeID ASC
 
 --08. Employee 24
 
+SELECT e.EmployeeID, e.FirstName,
+	CASE
+		WHEN DATEPART(YEAR, p.StartDate) >= 2005 THEN NULL
+		ELSE p.[Name]
+	END AS [PorjectName]
+FROM Employees AS e
+JOIN EmployeesProjects AS ep ON ep.EmployeeID = e.EmployeeID
+JOIN Projects AS p ON p.ProjectID = ep.ProjectID
+WHERE e.EmployeeID = 24
 
+--09. Employee Manager
 
+SELECT 
+	a1.EmployeeID,
+	a1.FirstName,a2.ManagerID,
+	a2.FirstName AS [ManagerName] 
+	FROM Employees AS a1
+LEFT JOIN Employees AS a2 ON a1.ManagerID = a2.EmployeeID
+WHERE a2.ManagerID IN (3, 7)
+ORDER BY a1.EmployeeID
 
+--10. Employees Summary
 
-
-SELECT * FROM Employees
-SELECT * FROM EmployeesProjects
-SELECT * FROM Projects
+SELECT TOP(50) e1.EmployeeID,
+	CONCAT(e1.FirstName, ' ', e1.LastName) AS [EmployeeName],
+	CONCAT(e2.firstName, ' ', e2.LastName) AS [ManagerName],
+	d.[Name] AS [DepartmentName]
+FROM Employees AS e1
+LEFT JOIN Employees AS e2 ON e1.ManagerID = e2.EmployeeID
+JOIN Departments AS d ON e1.DepartmentID = d.DepartmentID
+ORDER BY e1.EmployeeID
